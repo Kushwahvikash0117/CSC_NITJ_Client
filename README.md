@@ -1,10 +1,10 @@
 # CSC_NITJ
 
-Official website/project for the Computer Science Club, NIT Jalandhar.
+Official website/project for the Cyber Security Club, NIT Jalandhar.
 
 ## Tech Stack
-- Frontend: HTML, CSS, JavaScript
-- Backend: (add later)
+- Frontend: React.js + Tailwindcss
+- Backend: Node.js + Express.js
 
 ## Folder Structure
 - frontend/
@@ -12,4 +12,4 @@ Official website/project for the Computer Science Club, NIT Jalandhar.
 
 ## Contributors
 - Jaspreet Kaur
-- Kushwah Vikash
+- Vikash Kushwah
