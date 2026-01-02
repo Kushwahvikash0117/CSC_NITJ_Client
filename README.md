@@ -12,4 +12,5 @@ Official website/project for the Cyber Security Club, NIT Jalandhar.
 
 ## Contributors
 - Jaspreet Kaur
+- Kritika Joshi
 - Vikash Kushwah
