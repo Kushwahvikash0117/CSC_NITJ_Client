@@ -71,8 +71,8 @@ const NeuralNetwork = () => {
   return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }} />;
 };
 
-// --- GOAL CARD COMPONENT ---
-const GoalCard = ({ id, title, desc, active, path }) => {
+// --- REUSABLE CARD COMPONENT (Updated with Prefix prop) ---
+const GoalCard = ({ id, title, desc, active, path, prefix = "SEC" }) => {
   const handleNavigate = () => {
     if (active) {
       window.location.hash = path;
@@ -98,7 +98,7 @@ const GoalCard = ({ id, title, desc, active, path }) => {
 
         <div className="flex justify-between items-center mb-8 mt-2">
           <span className="font-mono text-[10px] text-cyan-500/80 tracking-[3px] bg-cyan-500/5 px-3 py-1 rounded-md border border-cyan-500/20">
-            SEC_{id}
+            {prefix}_{id}
           </span>
           <div className={`w-2 h-2 rounded-full shadow-[0_0_10px_#22d3ee] ${active ? 'bg-cyan-400 animate-pulse' : 'bg-gray-600'}`} />
         </div>
@@ -121,7 +121,7 @@ const GoalCard = ({ id, title, desc, active, path }) => {
           }`}
         >
           <div className="h-[1px] w-8 bg-current opacity-30 group-hover:w-12 transition-all" />
-          {active ? 'Analyze Module' : 'Scanning...'}
+          {active ? (prefix === 'EVT' ? 'View Details' : 'Analyze Module') : 'Scanning...'}
         </button>
       </div>
     </div>
@@ -131,11 +131,17 @@ const GoalCard = ({ id, title, desc, active, path }) => {
 const AboutPage = () => {
   const [activeCycle, setActiveCycle] = useState(0); 
   const [heroScanning, setHeroScanning] = useState(false);
-  const [headerVisible, setHeaderVisible] = useState(false);
-  const [visibleCards, setVisibleCards] = useState([false, false, false]);
+  
+  // --- 1. GOALS STATE ---
+  const [goalsHeaderVisible, setGoalsHeaderVisible] = useState(false);
+  const [visibleGoals, setVisibleGoals] = useState([false, false, false]);
   const goalsRef = useRef(null);
 
-  // --- UPDATED CONTENT ---
+  // --- 2. EVENTS STATE ---
+  const [eventsHeaderVisible, setEventsHeaderVisible] = useState(false);
+  const [visibleEvents, setVisibleEvents] = useState([false, false]); // Two events
+  const eventsRef = useRef(null);
+
   const heroContent = [
     { 
         title: "About CSC NITJ", 
@@ -151,26 +157,27 @@ const AboutPage = () => {
     }
   ];
 
+  // Hero Cycle Effect
   useEffect(() => {
     setHeroScanning(true);
-    // Cycle every 3.5 seconds for a faster feel
     const heroInterval = setInterval(() => {
       setHeroScanning(false);
       setTimeout(() => {
         setActiveCycle((prev) => (prev + 1) % 3);
         setHeroScanning(true);
-      }, 400); // Shorter gap for snappier transition
+      }, 400); 
     }, 3500); 
     return () => clearInterval(heroInterval);
   }, []);
 
+  // --- ANIMATION LOGIC: GOALS ---
   const startGoalsAnimation = () => {
-    setHeaderVisible(false);
-    setVisibleCards([false, false, false]);
-    setTimeout(() => setHeaderVisible(true), 300);
-    setTimeout(() => setVisibleCards([true, false, false]), 600);
-    setTimeout(() => setVisibleCards([true, true, false]), 900);
-    setTimeout(() => setVisibleCards([true, true, true]), 1200);
+    setGoalsHeaderVisible(false);
+    setVisibleGoals([false, false, false]);
+    setTimeout(() => setGoalsHeaderVisible(true), 300);
+    setTimeout(() => setVisibleGoals([true, false, false]), 600);
+    setTimeout(() => setVisibleGoals([true, true, false]), 900);
+    setTimeout(() => setVisibleGoals([true, true, true]), 1200);
   };
 
   useEffect(() => {
@@ -185,6 +192,34 @@ const AboutPage = () => {
     }, { threshold: 0.1 });
 
     if (goalsRef.current) observer.observe(goalsRef.current);
+    return () => {
+      observer.disconnect();
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  // --- ANIMATION LOGIC: EVENTS ---
+  const startEventsAnimation = () => {
+    setEventsHeaderVisible(false);
+    setVisibleEvents([false, false]);
+    setTimeout(() => setEventsHeaderVisible(true), 300);
+    setTimeout(() => setVisibleEvents([true, false]), 600);
+    setTimeout(() => setVisibleEvents([true, true]), 900);
+  };
+
+  useEffect(() => {
+    let intervalId;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        startEventsAnimation();
+        // Slightly longer interval for events to keep them readable
+        intervalId = setInterval(startEventsAnimation, 8000);
+      } else {
+        clearInterval(intervalId);
+      }
+    }, { threshold: 0.1 });
+
+    if (eventsRef.current) observer.observe(eventsRef.current);
     return () => {
       observer.disconnect();
       clearInterval(intervalId);
@@ -243,9 +278,9 @@ const AboutPage = () => {
       </section>
 
       {/* 2. OPERATIONAL GOALS SECTION */}
-      <section id="about" ref={goalsRef} className="relative z-10 pt-32 pb-12 px-6 max-w-7xl mx-auto">
-        <div className={`flex flex-col items-center mb-32 text-center transition-all transform ${
-          headerVisible ? 'opacity-100 translate-y-0 duration-1000' : 'opacity-0 -translate-y-5 duration-300'
+      <section id="goals" ref={goalsRef} className="relative z-10 pt-16 pb-12 px-6 max-w-7xl mx-auto">
+        <div className={`flex flex-col items-center mb-24 text-center transition-all transform ${
+          goalsHeaderVisible ? 'opacity-100 translate-y-0 duration-1000' : 'opacity-0 -translate-y-5 duration-300'
         }`}>
           <h2 className="text-3xl md:text-4xl font-black uppercase tracking-[0.3em] text-white/90">
             Operational <span className="text-cyan-500">Goals</span>
@@ -253,30 +288,65 @@ const AboutPage = () => {
           <div className="h-1 w-48 md:w-64 bg-cyan-500 mt-6 rounded-full shadow-[0_0_20px_#22d3ee]" />
         </div>
         
-        <div id="about-grid" className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20">
           <GoalCard 
-            active={visibleCards[0]} 
+            active={visibleGoals[0]} 
             id="001" 
             title="Education" 
             desc="Hands-on exposure through workshops, events, and technical sessions focusing on real-world security projects." 
             path="#education" 
+            prefix="SEC"
           />
           <GoalCard 
-            active={visibleCards[1]} 
+            active={visibleGoals[1]} 
             id="002" 
             title="Awareness" 
             desc="Developing a strong cybersecurity culture and building digital resilience through shared knowledge." 
             path="#awareness" 
+            prefix="SEC"
           />
           <GoalCard 
-            active={visibleCards[2]} 
+            active={visibleGoals[2]} 
             id="003" 
             title="Innovation" 
             desc="Encouraging research-driven solutions and ethical hacking practices to defend global digital infrastructures." 
             path="#competitions" 
+            prefix="SEC"
           />
         </div>
       </section>
+
+      {/* 3. OUR EVENTS SECTION (Moved from Home) */}
+      <section id="events" ref={eventsRef} className="relative z-10 pt-16 pb-32 px-6 max-w-7xl mx-auto">
+        <div className={`flex flex-col items-center mb-24 text-center transition-all transform ${
+          eventsHeaderVisible ? 'opacity-100 translate-y-0 duration-1000' : 'opacity-0 -translate-y-5 duration-300'
+        }`}>
+          <h2 className="text-3xl md:text-4xl font-black uppercase tracking-[0.3em] text-white/90">
+            Our <span className="text-cyan-500">Events</span>
+          </h2>
+          <div className="h-1 w-48 md:w-64 bg-cyan-500 mt-6 rounded-full shadow-[0_0_20px_#22d3ee]" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+          <GoalCard 
+            active={visibleEvents[0]} 
+            id="001" 
+            title="Hackathon 2025" 
+            desc="Join us for 24 hours of coding challenges, Capture The Flag (CTF) scenarios, and incredible prizes." 
+            path="#hackathon" 
+            prefix="EVT"
+          />
+          <GoalCard 
+            active={visibleEvents[1]} 
+            id="002" 
+            title="Cyber Workshop" 
+            desc="Hands-on sessions on ethical hacking, penetration testing, and network defense strategies." 
+            path="#workshop" 
+            prefix="EVT"
+          />
+        </div>
+      </section>
+
     </div>
   );
 };

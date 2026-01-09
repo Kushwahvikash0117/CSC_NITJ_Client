@@ -39,11 +39,11 @@ const MagneticButton = ({ children, className, onClick }) => {
 
 const Home = () => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [displayedText, setDisplayedText] = useState("");
+  // const [displayedText, setDisplayedText] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0); 
   const canvasRef = useRef(null);
 
-  const fullAboutText = "CSC NITJ is the official Cyber Security Club under the CSE Department. We organize workshops, hackathons, and projects to enhance students' cyber skills and awareness. Join us to explore the world of cybersecurity!";
+  // const fullAboutText = "CSC NITJ is the official Cyber Security Club under the CSE Department. We organize workshops, hackathons, and projects to enhance students' cyber skills and awareness. Join us to explore the world of cybersecurity!";
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -63,15 +63,15 @@ const Home = () => {
     setOffset({ x, y });
   };
 
-  useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      setDisplayedText(fullAboutText.slice(0, i));
-      i++;
-      if (i > fullAboutText.length) clearInterval(timer);
-    }, 30);
-    return () => clearInterval(timer);
-  }, []);
+  // useEffect(() => {
+  //   let i = 0;
+  //   const timer = setInterval(() => {
+  //     setDisplayedText(fullAboutText.slice(0, i));
+  //     i++;
+  //     if (i > fullAboutText.length) clearInterval(timer);
+  //   }, 30);
+  //   return () => clearInterval(timer);
+  // }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -154,8 +154,7 @@ const Home = () => {
   ];
 
   return (
-    <div className="bg-[#020617] text-white min-h-screen font-sans relative overflow-x-hidden" onMouseMove={handleMouseMove}>
-      
+<div className="bg-[#020617] text-white min-h-screen font-sans relative overflow-x-hidden">      
       <div className="fixed top-0 left-0 w-full h-1 z-[100] bg-white/5 backdrop-blur-sm">
         <div 
           className="h-full bg-[#00D1FF] shadow-[0_0_15px_#00D1FF] transition-all duration-150 ease-out"
@@ -229,7 +228,7 @@ const Home = () => {
             <p className="text-[10px] md:text-sm text-cyan-100 font-bold uppercase tracking-[0.2em] mt-4 opacity-80">Building Cyber Awareness & Ethical Hacking Skills</p>
             <div className="h-32"></div>
             <MagneticButton 
-              onClick={() => window.location.hash = '#about'}
+              onClick={() => window.location.hash = "#about"} // <--- Use navigate() instead of window.location
               className="cyber-button-tech px-8 py-3 uppercase text-[11px] tracking-[0.3em]"
             >
               Learn More
@@ -242,7 +241,7 @@ const Home = () => {
         <div className="neon-pulse" />
       </div>
 
-      {/* 2. ABOUT US SECTION */}
+      {/* 2. ABOUT US SECTION
       <section id="about" className="relative z-10 py-32 px-6 bg-[#020617]/80 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="glitch-hover text-[#00D1FF] text-5xl md:text-7xl font-black italic uppercase mb-10 tracking-tighter">About Us</h2>
@@ -263,13 +262,13 @@ const Home = () => {
             </MagneticButton>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <div className="cyber-line-container">
         <div className="cyber-line-pulse"></div>
       </div>
 
-      {/* 3. OUR EVENTS SECTION */}
+      {/* 3. OUR EVENTS SECTION
       <section id="events" className="relative z-10 py-24 px-6 bg-black/20">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="glitch-hover text-[#00D1FF] text-5xl md:text-7xl font-black italic uppercase mb-20 tracking-tighter">
@@ -286,7 +285,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* 4. FACULTY MENTORS SECTION */}
       <section className="relative z-10 py-32 px-6 bg-black/30">
@@ -317,7 +316,7 @@ const Home = () => {
       {/* 5. OUR LEADERS SECTION */}
       <section id="team" className="relative z-10 py-32 px-6 bg-black/40">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="glitch-hover text-[#00D1FF] text-5xl md:text-7xl font-black italic uppercase mb-24 tracking-tighter">Our Leaders</h2>
+          <h2 className="glitch-hover text-[#00D1FF] text-5xl md:text-7xl font-black italic uppercase mb-24 tracking-tighter">Our Founders</h2>
           <div className="flex flex-wrap justify-center gap-20 md:gap-32">
             <div className="flex flex-col items-center">
               <div className="leader-img-container mb-8 group overflow-hidden">
@@ -329,7 +328,7 @@ const Home = () => {
                 />
               </div>
               <h3 className="text-[#00D1FF] text-2xl font-bold tracking-wider">Vikash Kushwah</h3>
-              <p className="text-gray-500 uppercase text-[10px] font-bold tracking-[0.4em] mt-2">Lead / Coordinator</p>
+              <p className="text-gray-500 uppercase text-[10px] font-bold tracking-[0.4em] mt-2">Founder / Coordinator</p>
             </div>
             <div className="flex flex-col items-center">
               <div className="leader-img-container mb-8 group overflow-hidden">
@@ -341,7 +340,7 @@ const Home = () => {
                 />
               </div>
               <h3 className="text-[#00D1FF] text-2xl font-bold tracking-wider">Kritika Joshi</h3>
-              <p className="text-gray-500 uppercase text-[10px] font-bold tracking-[0.4em] mt-2">Lead / Coordinator</p>
+              <p className="text-gray-500 uppercase text-[10px] font-bold tracking-[0.4em] mt-2">Founder / Coordinator</p>
             </div>
           </div>
         </div>
