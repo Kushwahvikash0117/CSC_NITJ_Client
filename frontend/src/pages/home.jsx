@@ -39,12 +39,19 @@ const MagneticButton = ({ children, className, onClick }) => {
 
 const Home = () => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  // const [displayedText, setDisplayedText] = useState("");
   const [scrollProgress, setScrollProgress] = useState(0); 
+  
+  // --- TYPEWRITER STATE ---
+  const [vikashText, setVikashText] = useState("");
+  const [kritikaText, setKritikaText] = useState("");
+  
   const canvasRef = useRef(null);
 
-  // const fullAboutText = "CSC NITJ is the official Cyber Security Club under the CSE Department. We organize workshops, hackathons, and projects to enhance students' cyber skills and awareness. Join us to explore the world of cybersecurity!";
+  // The messages to type out
+  const vikashFullMsg = "In cybersecurity, the only limit is your curiosity. We built CSC to cultivate a mindset that questions how systems work. Keep exploring, keep breaking things (ethically), and never stop learning.";
+  const kritikaFullMsg = "Technology is powerful, but community is what drives innovation. My vision for CSC is a space where collaboration thrives—where beginners and experts alike come together to secure the digital future.";
 
+  // --- SCROLL PROGRESS ---
   useEffect(() => {
     const updateScrollProgress = () => {
       const currentScroll = window.scrollY;
@@ -57,22 +64,40 @@ const Home = () => {
     return () => window.removeEventListener("scroll", updateScrollProgress);
   }, []);
 
+  // --- MOUSE PARALLAX ---
   const handleMouseMove = (e) => {
     const x = (window.innerWidth / 2 - e.pageX) / 45;
     const y = (window.innerHeight / 2 - e.pageY) / 45;
     setOffset({ x, y });
   };
 
-  // useEffect(() => {
-  //   let i = 0;
-  //   const timer = setInterval(() => {
-  //     setDisplayedText(fullAboutText.slice(0, i));
-  //     i++;
-  //     if (i > fullAboutText.length) clearInterval(timer);
-  //   }, 30);
-  //   return () => clearInterval(timer);
-  // }, []);
+  // --- TYPEWRITER ANIMATION LOGIC ---
+  useEffect(() => {
+    let vIndex = 0;
+    let kIndex = 0;
+    const speed = 30; // Typing speed in ms
 
+    const typeTimer = setInterval(() => {
+      // Type Vikash's text
+      if (vIndex <= vikashFullMsg.length) {
+        setVikashText(vikashFullMsg.slice(0, vIndex));
+        vIndex++;
+      }
+      // Type Kritika's text
+      if (kIndex <= kritikaFullMsg.length) {
+        setKritikaText(kritikaFullMsg.slice(0, kIndex));
+        kIndex++;
+      }
+      // Stop when both are done
+      if (vIndex > vikashFullMsg.length && kIndex > kritikaFullMsg.length) {
+        clearInterval(typeTimer);
+      }
+    }, speed);
+
+    return () => clearInterval(typeTimer);
+  }, []);
+
+  // --- BACKGROUND CANVAS ANIMATION ---
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -154,7 +179,7 @@ const Home = () => {
   ];
 
   return (
-<div className="bg-[#020617] text-white min-h-screen font-sans relative overflow-x-hidden">      
+    <div className="bg-[#020617] text-white min-h-screen font-sans relative overflow-x-hidden">      
       <div className="fixed top-0 left-0 w-full h-1 z-[100] bg-white/5 backdrop-blur-sm">
         <div 
           className="h-full bg-[#00D1FF] shadow-[0_0_15px_#00D1FF] transition-all duration-150 ease-out"
@@ -228,7 +253,7 @@ const Home = () => {
             <p className="text-[10px] md:text-sm text-cyan-100 font-bold uppercase tracking-[0.2em] mt-4 opacity-80">Building Cyber Awareness & Ethical Hacking Skills</p>
             <div className="h-32"></div>
             <MagneticButton 
-              onClick={() => window.location.hash = "#about"} // <--- Use navigate() instead of window.location
+              onClick={() => window.location.hash = "#about"} 
               className="cyber-button-tech px-8 py-3 uppercase text-[11px] tracking-[0.3em]"
             >
               Learn More
@@ -241,53 +266,11 @@ const Home = () => {
         <div className="neon-pulse" />
       </div>
 
-      {/* 2. ABOUT US SECTION
-      <section id="about" className="relative z-10 py-32 px-6 bg-[#020617]/80 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="glitch-hover text-[#00D1FF] text-5xl md:text-7xl font-black italic uppercase mb-10 tracking-tighter">About Us</h2>
-          <div className="bg-black/40 p-8 rounded-lg border border-cyan-500/20 font-mono text-left relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-cyan-500/30"></div>
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed">
-              <span className="text-[#00D1FF] mr-2 font-bold">{'>'}</span>
-              {displayedText}
-              <span className="animate-pulse bg-[#00D1FF] ml-1 inline-block w-2 h-5"></span>
-            </p>
-          </div>
-          <div className="mt-12">
-            <MagneticButton 
-              onClick={() => window.location.hash = '#team'}
-              className="px-6 py-2 text-[#00D1FF] font-bold uppercase tracking-[0.3em] text-xs border border-cyan-500/30 rounded hover:bg-cyan-500/10"
-            >
-              Meet Our Team &rarr;
-            </MagneticButton>
-          </div>
-        </div>
-      </section> */}
-
       <div className="cyber-line-container">
         <div className="cyber-line-pulse"></div>
       </div>
 
-      {/* 3. OUR EVENTS SECTION
-      <section id="events" className="relative z-10 py-24 px-6 bg-black/20">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="glitch-hover text-[#00D1FF] text-5xl md:text-7xl font-black italic uppercase mb-20 tracking-tighter">
-            Our Events
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
-            <div className="event-card p-12 flex flex-col items-center justify-center min-h-[300px]">
-              <h3 className="text-[#00D1FF] text-3xl font-bold mb-6 tracking-wide uppercase">Hackathon 2025</h3>
-              <p className="text-gray-400 text-lg leading-relaxed font-medium max-w-sm text-center">Join us for 24 hours of coding challenges and prizes!</p>
-            </div>
-            <div className="event-card p-12 flex flex-col items-center justify-center min-h-[300px]">
-              <h3 className="text-[#00D1FF] text-3xl font-bold mb-6 tracking-wide uppercase">Cyber Workshop</h3>
-              <p className="text-gray-400 text-lg leading-relaxed font-medium max-w-sm text-center">Hands-on sessions on ethical hacking and penetration testing.</p>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
-      {/* 4. FACULTY MENTORS SECTION */}
+      {/* 2. FACULTY MENTORS SECTION */}
       <section className="relative z-10 py-32 px-6 bg-black/30">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="glitch-hover text-[#00D1FF] text-5xl md:text-7xl font-black italic uppercase mb-24 tracking-tighter">Faculty Mentors</h2>
@@ -309,12 +292,8 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="neon-path-container">
-        <div className="neon-pulse" style={{ animationDelay: '1.5s' }} />
-      </div>
-
-      {/* 5. OUR LEADERS SECTION */}
-      <section id="team" className="relative z-10 py-32 px-6 bg-black/40">
+      {/* 3. OUR FOUNDERS SECTION (MOVED UP) */}
+      <section id="team" className="relative z-10 py-24 px-6 bg-black/40">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="glitch-hover text-[#00D1FF] text-5xl md:text-7xl font-black italic uppercase mb-24 tracking-tighter">Our Founders</h2>
           <div className="flex flex-wrap justify-center gap-20 md:gap-32">
@@ -345,6 +324,46 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <div className="neon-path-container">
+        <div className="neon-pulse" style={{ animationDelay: '1.5s' }} />
+      </div>
+
+      {/* 4. FOUNDER MESSAGES (MOVED DOWN) */}
+      <section id="messages" className="relative z-10 py-24 px-6 bg-black/40">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            {/* BOX 1: Vikash Message */}
+            <div className="flex flex-col h-full">
+               <h3 className="text-[#00D1FF] text-xl font-bold tracking-wider mb-4 uppercase">Vikash's Vision</h3>
+               <div className="bg-black/40 p-8 rounded-lg border border-cyan-500/20 font-mono text-left relative overflow-hidden flex-1 group hover:border-cyan-500/50 transition-colors">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-cyan-500/30"></div>
+                  <p className="text-gray-300 text-sm md:text-base leading-relaxed">
+                    <span className="text-[#00D1FF] mr-2 font-bold">{'>'}</span>
+                    {vikashText}
+                    <span className="animate-pulse bg-[#00D1FF] ml-1 inline-block w-2 h-4 align-middle"></span>
+                  </p>
+               </div>
+            </div>
+
+            {/* BOX 2: Kritika Message */}
+            <div className="flex flex-col h-full">
+               <h3 className="text-[#00D1FF] text-xl font-bold tracking-wider mb-4 uppercase">Kritika's Vision</h3>
+               <div className="bg-black/40 p-8 rounded-lg border border-cyan-500/20 font-mono text-left relative overflow-hidden flex-1 group hover:border-cyan-500/50 transition-colors">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-cyan-500/30"></div>
+                  <p className="text-gray-300 text-sm md:text-base leading-relaxed">
+                    <span className="text-[#00D1FF] mr-2 font-bold">{'>'}</span>
+                    {kritikaText}
+                    <span className="animate-pulse bg-[#00D1FF] ml-1 inline-block w-2 h-4 align-middle"></span>
+                  </p>
+               </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 };
