@@ -3,6 +3,7 @@ import Navbar from './components/navbar';
 import Footer from './components/footer';
 
 // Pages
+import Profile from './pages/Profile';
 import Home from './pages/home';
 import About from './pages/about';
 import Education from './pages/education'; 
@@ -122,6 +123,7 @@ function App() {
 
     // Original Page logic
     switch (currentPath) {
+      case '#Profile': return <Profile />;
       case '#about': return <About />;
       case '#education': return <Education />; 
       case '#awareness': return <Awareness />; 

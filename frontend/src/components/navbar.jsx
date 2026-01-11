@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import clubLogo from '../assets/clublogo.png';
 
+
 const Navbar = ({ currentPath, isLoggedIn, onLogin, onLogout }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -43,25 +44,22 @@ const Navbar = ({ currentPath, isLoggedIn, onLogin, onLogout }) => {
       <nav className="fixed top-0 w-full z-[100] bg-[#010714]/80 backdrop-blur-xl border-b border-white/5 px-6 md:px-16 py-5 flex justify-between items-center">
         
         {/* LOGO SECTION */}
-        <div className="flex items-center gap-4 group cursor-pointer" onClick={() => window.location.hash = '#home'}>
-          <div className="relative w-12 h-12 flex items-center justify-center transition-all duration-500 group-hover:scale-110">
-            <img 
-              src={clubLogo} 
-              alt="CSC Logo" 
-              className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]"
-            />
-          </div>
-          <div className="flex flex-col">
-            <h1 className="text-white font-black text-xl tracking-tighter leading-none">
-              CSC <span className="text-cyan-400 italic">NITJ</span>
-            </h1>
-            <p className="text-[8px] text-gray-500 font-bold tracking-[0.3em] uppercase">Cyber Security Club</p>
-          </div>
-        </div>
+        <div className="flex flex-col cursor-pointer group"
+  onClick={() => window.location.hash = '#home'}
+>
+  <h1 className="text-white font-black text-xl tracking-tighter leading-none group-hover:text-cyan-400 transition">
+    CSC <span className="text-cyan-400 italic">NITJ</span>
+  </h1>
+  <p className="text-[8px] text-gray-500 font-bold tracking-[0.3em] uppercase">
+    Cyber Security Club
+  </p>
+</div>
+
 
         {/* NAVIGATION & AUTH */}
         <div className="flex items-center gap-8">
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="flex items-center gap-8">
+
             {isLoggedIn && (
               <>
                 {navLinks.map((link) => (
@@ -90,12 +88,24 @@ const Navbar = ({ currentPath, isLoggedIn, onLogin, onLogout }) => {
                 >
                   DASHBOARD
                 </a>
+                <a
+  href="#Profile"
+  className="px-4 py-1.5 rounded text-[9px] font-black tracking-[0.2em] uppercase border border-cyan-500/30 text-cyan-500 hover:bg-cyan-500/10"
+>
+  PROFILE
+</a>
+
+
               </>
             )}
           </div>
 
           <button
-            onClick={isLoggedIn ? onLogout : () => setIsModalOpen(true)}
+            onClick={isLoggedIn ? onLogout : () => {
+                                window.location.hash = '#home';
+                                setIsModalOpen(true);
+                                }}
+
             className={`px-6 py-2 rounded-sm text-[10px] font-black tracking-[0.2em] uppercase transition-all duration-300 border ${
               isLoggedIn 
                 ? 'border-red-500/30 text-red-500 hover:bg-red-500/10' 
@@ -110,7 +120,11 @@ const Navbar = ({ currentPath, isLoggedIn, onLogin, onLogout }) => {
       {/* MODAL OVERLAY */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center px-4">
-          <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setIsModalOpen(false)} />
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => {
+                        setIsModalOpen(false);
+                        window.location.hash = '#home';
+                        }}
+ />
           <div className="relative w-full max-w-sm bg-[#0a0f1d] border border-cyan-500/30 p-10 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
             <div className="flex justify-center mb-6 opacity-80">
                <img src={clubLogo} alt="CSC Logo" className="w-16 h-16 object-contain" />
@@ -156,7 +170,11 @@ const Navbar = ({ currentPath, isLoggedIn, onLogin, onLogout }) => {
                 <button type="submit" className="w-full bg-cyan-500 text-black font-black py-4 rounded-lg text-xs tracking-[0.2em] uppercase hover:bg-cyan-400 transition-all">
                   Verify Identity
                 </button>
-                <button type="button" onClick={() => setIsModalOpen(false)} className="w-full py-2 text-gray-500 text-[9px] font-black tracking-widest uppercase hover:text-white transition-colors">
+                <button type="button" onClick={() => {
+  setIsModalOpen(false);
+  window.location.hash = '#home';
+}}
+ className="w-full py-2 text-gray-500 text-[9px] font-black tracking-widest uppercase hover:text-white transition-colors">
                   Cancel Access
                 </button>
               </div>
