@@ -3,24 +3,31 @@ import clubLogo from '../assets/clublogo.png';
 
 const Navbar = ({ currentPath, isLoggedIn, onLogin, onLogout }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [rollNo, setRollNo] = useState('');
+  
+  // 1. Changed state from rollNo to email
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    if (!/^\d+$/.test(rollNo)) {
-      setError('Roll No must be numeric (0-9 only)');
+
+    // 2. Updated Validation Logic
+    // Check if email is empty or doesn't end with the specific domain
+    if (!email.trim().endsWith('@nitj.ac.in')) {
+      setError('Access Denied: Email must end with @nitj.ac.in');
       return;
     }
+
     if (password.length < 4) {
       setError('Password must be at least 4 characters');
       return;
     }
+
     setError('');
     onLogin(); 
     setIsModalOpen(false);
-    setRollNo('');
+    setEmail(''); // Reset email
     setPassword('');
   };
 
@@ -113,17 +120,20 @@ const Navbar = ({ currentPath, isLoggedIn, onLogin, onLogout }) => {
               <p className="text-gray-500 text-[9px] font-bold tracking-[0.3em] uppercase mt-2">Authorization Required</p>
             </div>
             <form onSubmit={handleLoginSubmit} className="space-y-5">
+              
+              {/* 3. Updated Input Field for Email */}
               <div className="space-y-2">
-                <label className="text-[9px] text-cyan-500 font-black tracking-widest uppercase ml-1">Student Roll No</label>
+                <label className="text-[9px] text-cyan-500 font-black tracking-widest uppercase ml-1">Student Email</label>
                 <input
-                  type="text"
+                  type="email"
                   required
-                  placeholder="NUMERIC ONLY"
-                  value={rollNo}
-                  onChange={(e) => setRollNo(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-lg p-4 text-white text-xs font-mono focus:border-cyan-500/50 outline-none transition-all"
+                  placeholder="student@nitj.ac.in"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-black/50 border border-white/10 rounded-lg p-4 text-white text-xs font-mono focus:border-cyan-500/50 outline-none transition-all placeholder:text-gray-700"
                 />
               </div>
+
               <div className="space-y-2">
                 <label className="text-[9px] text-cyan-500 font-black tracking-widest uppercase ml-1">Security Key</label>
                 <input
@@ -132,14 +142,16 @@ const Navbar = ({ currentPath, isLoggedIn, onLogin, onLogout }) => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-lg p-4 text-white text-xs font-mono focus:border-cyan-500/50 outline-none transition-all"
+                  className="w-full bg-black/50 border border-white/10 rounded-lg p-4 text-white text-xs font-mono focus:border-cyan-500/50 outline-none transition-all placeholder:text-gray-700"
                 />
               </div>
+              
               {error && (
                 <div className="text-red-500 text-[9px] font-bold tracking-widest uppercase bg-red-500/5 p-2 border-l-2 border-red-500">
                   ⚠️ {error}
                 </div>
               )}
+              
               <div className="pt-4 flex flex-col gap-3">
                 <button type="submit" className="w-full bg-cyan-500 text-black font-black py-4 rounded-lg text-xs tracking-[0.2em] uppercase hover:bg-cyan-400 transition-all">
                   Verify Identity
